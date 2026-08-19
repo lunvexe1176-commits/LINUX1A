@@ -1,0 +1,6 @@
+Descargr Git para windows
+Abrir el erchivo instalador que descargaste 
+Cuando aparezca la pantlla darle next hasta acabar
+Instalar Git
+Abrir Visual Studio Code 
+Abrir una carpeta en "Archivo" y "Abrir carpeta"
