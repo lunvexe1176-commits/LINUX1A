@@ -1,6 +1,22 @@
-Descargr Git para windows
-Abrir el erchivo instalador que descargaste 
-Cuando aparezca la pantlla darle next hasta acabar
-Instalar Git
-Abrir Visual Studio Code 
-Abrir una carpeta en "Archivo" y "Abrir carpeta"
+Primero se descarga el instalador de VirtualBox
+En el sistema de instalación aceptar todo hasta que te de la opción de Instalar
+Después descargar la imagen de instalación en la página oficial de Ubuntu, que es una imagen.instalador
+En VirtualBox seleccionar "New" parahacer un maquína virtual nueva
+Introducir los datos y asignar recursos a la máquina virtual
+Iniciar la máquina virtual
+Configurar tu usuario de Ubuntu y Instalar
+Entrar a Ubuntu
+Instalar Git y Visual Studio Code
+Abrir el arcivo descrgado de Git e iniciar la instalación
+Presionar a todo "Next" hasta llegar a Instalar
+En visual abrir una nueva carpeta en "File" y "Open Folder"
+Iniciar un repositorio
+CLonar el repositorio
+Y para comprbar solo abres la terminal
+
+
+#instrucción de autenticación de nombre de usuario de Git:
+git config --global user.name "First_Name Last_Name"
+
+#instrucción de autenticación de correo electrónico de usuario de git(de preferencia que se use para Github)
+git config --global user.email "My_Name@gmail.com"
