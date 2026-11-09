@@ -20,3 +20,380 @@ git config --global user.name "First_Name Last_Name"
 
 #instrucción de autenticación de correo electrónico de usuario de git(de preferencia que se use para Github)
 git config --global user.email "My_Name@gmail.com"
+
+GUÍA INTEGRAL DE ADMINISTRACIÓN DE SISTEMAS LINUX
+
+Desde la Navegación y Scripting en Bash hasta la Seguridad SSH, Auditoría con Lynis y Despliegue Web
+
+RESUMEN EJECUTIVO
+
+Esta guía compila y documenta de forma sistemática y estructurada la totalidad de las actividades prácticas realizadas sobre la máquina virtual Ubuntu Linux (bloodmoon-VirtualBox). El documento abarca desde la manipulación fundamental de archivos y creación de scripts en Bash, hasta la administración de servidores web (Apache), el control estricto de permisos, la autenticación remota mediante llaves criptográficas SSH, auditorías de seguridad con Lynis y la sincronización automatizada de reportes hacia repositorios de GitHub.
+
+MÓDULO 1: COMANDOS BÁSICOS Y GESTIÓN DE ARCHIVOS
+
+1.1 Ubicación e Inspección del Sistema
+
+Al iniciar la intérprete de comandos (Bash), la terminal ubica al usuario en su directorio personal (~), que corresponde a la ruta /home/usuario.
+
+lunvry@lunvry-VirtualBox:~$ ls
+Descargas  Escritorio  Imágenes  Música  Público  Documentos  examples.desktop  laboratorio-cli  Plantillas  Vídeos
+
+
+pwd (Print Working Directory): Imprime en pantalla la ruta absoluta completa donde se encuentra ubicado el usuario en el árbol de directorios.
+
+ls (List): Despliega el contenido visual del directorio actual.
+
+1.2 Navegación en el Árbol de Directorios
+
+El comando cd (Change Directory) permite el desplazamiento dentro del sistema de archivos.
+
+Navegar a una ruta específica:
+
+cd ~/laboratorio-cli/
+
+
+Retroceder un nivel jerárquico:
+
+cd ..
+
+
+Regresar al directorio personal (Home):
+
+cd ~
+
+
+Conmutar al último directorio visitado:
+
+cd -
+
+
+Este comando actúa como un acceso directo inteligente que alterna entre la ubicación actual y la inmediatamente anterior.
+
+1.3 Creación Masiva de Archivos con Expansión de Llaves
+
+Para optimizar el flujo de trabajo en la terminal, Bash permite crear múltiples archivos y directorios simultáneamente mediante el uso de llaves {} y el comando touch.
+
+touch docs/{guia,notas}.md src/{main,test}.py logs/app.log README.txt
+
+
+Desglose de ejecución:
+
+docs/{guia,notas}.md: Crea de forma automática docs/guia.md y docs/notas.md.
+
+src/{main,test}.py: Genera src/main.py y src/test.py.
+
+logs/app.log y README.txt: Crea archivos específicos de registros y documentación general en sus rutas respectivas.
+
+1.4 Inspección Detallada de Permisos (ls -lah)
+
+Para verificar las propiedades avanzadas de los archivos, se utiliza la combinación de parámetros -lah:
+
+ls -lah
+
+
+Salida típica del sistema:
+
+drwxrwxr-x 2 bloodmoon bloodmoon 4.0K Aug 26 23:02 .
+drwxrwxr-x 5 bloodmoon bloodmoon 4.0K Aug 26 23:02 ..
+-rw-rw-r-- 1 bloodmoon bloodmoon   15 Aug 26 23:03 app.log
+
+
+-l: Muestra la vista en formato largo (modo de permisos, enlaces, propietario, grupo, tamaño y fecha de modificación).
+
+-a: Incluye todos los elementos, incluyendo archivos ocultos que inician con un punto (. y ..).
+
+-h: Formatea el tamaño de los archivos a unidades legibles para humanos (KB, MB, GB).
+
+MÓDULO 2: AYUDA, DOCUMENTACIÓN Y COMANDOS INTERNOS
+
+En Linux existen diferencias fundamentales entre los comandos integrados directamente en el intérprete (shell builtins) y los programas ejecutables externos guardados en el disco.
+
+2.1 Identificación de Comandos (type)
+
+El comando type permite evaluar el origen de cualquier orden:
+
+type cd
+
+
+Salida: cd is a shell builtin (Indica que cd es una función interna de Bash y no un binario separado).
+
+2.2 Fuentes de Documentación del Sistema
+
+Comando help: Utilizado exclusivamente para consultar la ayuda rápida de comandos internos (builtins):
+
+help cd
+
+
+Comando man (Manual): Abre la documentación oficial completa y detallada de utilidades externas:
+
+man ls
+
+
+Parámetro --help: Opción rápida presente en la mayoría de las herramientas para desplegar sintaxis y argumentos sin entrar al paginador:
+
+ls --help
+
+
+Sistema info: Proporciona documentación interactiva mediante hipervínculos estructurados sobre los paquetes base del sistema (GNU Coreutils):
+
+info coreutils
+
+
+2.3 Operadores de Control (&&)
+
+El operador lógico && permite encadenar comandos, garantizando que el segundo solo se ejecute si el primero finalizó exitosamente (código de salida 0).
+
+cd laboratorio-cli/src && pwd
+
+
+MÓDULO 3: PROGRAMACIÓN DE SCRIPTS EN BASH
+
+Un script de Bash es un archivo plano que contiene una secuencia de instrucciones para ser ejecutadas por el intérprete de comandos. Todos los scripts deben iniciar con la línea Shebang (#!/bin/bash o #!/bin/sh).
+
+3.1 Script 1: Saludo Interactivo (saludo.sh)
+
+Demuestra la captura de entrada de usuario mediante teclado y la interpolación de variables.
+
+#!/bin/bash
+read -p "Cual es tu nombre? " nombre
+echo "Hola $nombre! Bienvenido a LINUX"
+
+
+read -p: Muestra un mensaje en pantalla y almacena la respuesta del usuario en la variable nombre.
+
+echo: Muestra el contenido del saludo evaluando el valor guardado mediante $nombre.
+
+3.2 Script 2: Operaciones Matemáticas Avanzadas (operaciones.sh)
+
+Demuestra el cálculo aritmético interno y la asignación de valores por defecto en caso de omitir la entrada de datos.
+
+#!/bin/bash
+read -p "Ingresa un numero (Presiona enter para 2) " num1
+num1=${num1:-2}
+read -p "Ingresa un numero (Presiona enter para 2) " num2
+num2=${num2:-2}
+
+suma=$((num1 + num2))
+resta=$((num1 - num2))
+multiplicacion=$((num1 * num2))
+division=$((num1 / num2))
+residuo=$((num1 % num2))
+potencia=$((num1 ** num2))
+
+echo "El resultado de la suma es: $suma"
+echo "El resultado de la resta es: $resta"
+echo "El resultado de la multiplicacion es: $multiplicacion"
+echo "El resultado de la division es: $division"
+echo "El resultado del residuo es: $residuo"
+echo "El resultado de la potencia es: $potencia"
+
+
+Conceptos Clave:
+
+${variable:-defecto}: Si la variable está vacía (el usuario solo presionó Enter), toma el valor alternativo 2.
+
+$((...)): Sintaxis de expansión aritmética para evaluar operaciones matemáticas de enteros (+, -, *, /, % para residuo y ** para potencia).
+
+3.3 Script 3: Cálculo Geométrico (equisde.sh)
+
+Aplica fórmulas algebraicas respetando la jerarquía de operaciones dentro de la terminal.
+
+#!/bin/bash
+read -p "Ingresar la base (2) " num1
+num1=${num1:-2}
+read -p "Ingresa la altura (2) " num2
+num2=${num2:-2}
+
+area=$((num1 * num2))
+perimetro=$((2 * (num1 + num2)))
+ancho=$((num1))
+largo=$((num2))
+
+echo "Area: $area"
+echo "Perimetro: $perimetro"
+echo "Ancho: $ancho"
+echo "Largo: $largo"
+
+
+3.4 Script 4: Clasificación y Procesamiento de Archivos (listado.sh)
+
+Utiliza funciones, bucles de iteración (for) y la estructura de selección múltiple case para clasificar extensiones de archivos.
+
+#!/bin/bash
+mostrar_ayuda(){
+    echo "Uso: $0 <directorio_origen>"
+    echo "Ejemplo: $0 /home/ubuntu/scripts"
+}
+
+respaldar_archivos(){
+    local origen=$1
+    echo "Iniciando procesamiento en: $origen"
+    for archivo in "$origen"/*; do
+        if [ -f "$archivo" ]; then
+            case "${archivo##*.}" in
+                txt|md)
+                    echo "[TEXTO] Respaldando archivos de notas: $(basename "$archivo")"
+                    ;;
+                sh)
+                    echo "[SCRIPT] Saltando archivo ejecutable: $(basename "$archivo")"
+                    ;;
+                *)
+                    echo "[OTROS] Respaldando archivo general: $(basename "$archivo")"
+                    ;;
+            esac
+        fi
+    done
+}
+
+
+${archivo##*.}: Expresión que extrae únicamente la extensión del archivo.
+
+basename: Elimina la ruta de directorios para dejar solo el nombre del archivo.
+
+3.5 Script 5: Automatización de Entorno y Ocultamiento (holamundo.sh)
+
+Genera directorios y archivos ocultos de forma automatizada.
+
+#!/bin/sh
+echo "hola mundo"
+pwd
+mkdir tmp
+touch tmp/.env
+
+
+Archivos Ocultos (.env): Cualquier archivo o carpeta cuyo nombre inicie con un punto (.) será ocultado por el sistema de archivos de Linux, requiriendo el uso de ls -a para ser visualizado.
+
+MÓDULO 4: ADMINISTRACIÓN DE PERMISOS DE ARCHIVOS
+
+Linux utiliza un modelo de seguridad basado en permisos divididos en tres clases: Propietario (u), Grupo (g) y Otros (o), con tres tipos de acciones: Lectura (r), Escritura (w) y Ejecución (x).
+
+4.1 Modificación de Permisos con chmod
+
+Para poder correr un script, el archivo debe contar explícitamente con el permiso de ejecución (+x).
+
+Otorgar permiso de ejecución:
+
+chmod +x holamundo.sh
+
+
+Remover permiso de ejecución:
+
+chmod -x holamundo.sh
+
+
+Remover permisos de lectura (-r):
+
+chmod -r holamundo.sh
+
+
+4.2 Error de Lectura por Permisos Denegados
+
+Si un usuario intenta abrir con un editor como Nano un archivo al cual se le retiraron los permisos de lectura (-r), el sistema operativo bloquea la acción arrojando el error:
+
+[ Error reading holamundo.sh: Permission denied ]
+
+
+MÓDULO 5: AUDITORÍA DE SEGURIDAD AUTOMATIZADA (LYNIS) Y RESPALDO EN GITHUB
+
+5.1 Script de Instalación y Ejecución de Lynis (lynis.sh)
+
+Lynis es una herramienta profesional de auditoría de seguridad para sistemas Linux. El siguiente script automatiza su descarga, validación de privilegios e inspección.
+
+#!/bin/bash
+if [ "$EUID" -ne 0 ]; then
+  echo "Por favor, ejecuta este script como root (sudo)"
+  exit 1
+fi
+
+echo "1. Actualizando los índices del sistema..."
+apt-get update -y
+
+echo "2. Instalando dependencias necesarias..."
+apt-get install -y apt-transport-https ca-certificates curl software-properties-common gnupg
+
+echo "3. Configurando el repositorio oficial de lynis..."
+curl -fsSL https://cisofy.com/files/lynis-keyring.gpg | gpg --dearmor -o /usr/share/keyrings/cisofy-archive-keyring.gpg
+echo "deb [arch=amd64 signed-by=/usr/share/keyrings/cisofy-archive-keyring.gpg] https://cisofy.com/stable main" > /etc/apt/sources.list.d/cisofy-lynis.list
+
+echo "4. Instalando lynis..."
+apt-get update -y
+apt-get install -y lynis
+
+echo "5. Ejecutando analisis automatico..."
+lynis audit system
+
+
+Comprobación [ "$EUID" -ne 0 ]: Garantiza que el script se corra como administrador (root), deteniendo la ejecución en caso contrario.
+
+5.2 Sincronización Automática con GitHub (lynis-github.sh)
+
+Recoge los reportes del escaneo (lynis.log y lynis-report.dat), los empaqueta, genera un commit con la fecha y hora exacta, y los sube a un repositorio remoto.
+
+sudo ./lynis-github.sh
+
+
+Proceso interno:
+
+Autentica al usuario mediante un Token de Acceso Personal (PAT) cifrado.
+
+Copia los reportes desde /var/log/ hacia la estructura de Git.
+
+Ejecuta git add, git commit y git push hacia la rama main del repositorio lynisi1.git.
+
+MÓDULO 6: CONEXIÓN REMOTA SSH Y SERVIDOR WEB APACHE
+
+6.1 Configuración e Inicio de Sesión SSH
+
+Para administrar el servidor Ubuntu de forma remota desde Windows PowerShell:
+
+Habilitar autenticación por contraseña en Ubuntu:
+Editar /etc/ssh/sshd_config y asegurar la directiva:
+
+PasswordAuthentication yes
+
+
+Reiniciar el servicio:
+
+sudo systemctl restart ssh
+
+
+Conexión mediante contraseña (PowerShell):
+
+ssh bloodmoon@192.168.0.7
+
+
+Conexión avanzada con Par de Llaves Criptográficas (.ssh/id_123):
+
+# Descarga remota de la llave pública/privada
+scp -P 22 bloodmoon@192.168.0.7:/home/bloodmoon/.ssh/id_123 "$env:USERPROFILE\.ssh\id_123"
+
+# Ajuste estricto de permisos en Windows
+$key = "$env:USERPROFILE\.ssh\id_123"
+icacls $key /inheritance:r
+icacls $key /grant:r "$($env:USERNAME):(R)"
+
+# Conexión cifrada sin contraseña
+ssh -p 22 -i "$env:USERPROFILE\.ssh\id_123" root@192.168.0.7
+
+
+6.2 Servidor Web Apache (/var/www/html)
+
+La administración del portal web se realiza dentro de la carpeta raíz del servidor Apache /var/www/html.
+
+Estructura modular desplegada:
+
+index.html: Estructura y menú de la guía interactiva.
+
+style.css: Estilos visuales temáticos RPG / Clásicos.
+
+script.js: Lógica interactiva en JavaScript.
+
+Para verificar que los archivos del servidor web están correctamente posicionados:
+
+cd /var/www/html
+ls -lah
+
+
+-rw-r--r-- 1 root root 1.6K Nov  4 14:44 index.html
+-rw-r--r-- 1 root root 8.0K Nov  4 14:50 script.js
+-rw-r--r-- 1 root root 3.4K Nov  4 14:47 style.css
